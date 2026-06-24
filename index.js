@@ -1,6 +1,12 @@
+// Railway සඳහා සරල VLESS + WebSocket කෝඩ් එක
+const { connect } = require('cloudflare:sockets');
 const http = require('http');
+
 const server = http.createServer((req, res) => {
   res.writeHead(200, {'Content-Type': 'text/plain'});
   res.end('VLESS Backend Active');
 });
-server.listen(process.env.PORT || 3000);
+
+server.listen(process.env.PORT || 3000, () => {
+  console.log('Server running');
+});
