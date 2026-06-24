@@ -1,12 +1,16 @@
-// Railway සඳහා සරල VLESS + WebSocket කෝඩ් එක
-const { connect } = require('cloudflare:sockets');
 const http = require('http');
+const { createProxyServer } = require('http-proxy');
 
+const proxy = createProxyServer({});
 const server = http.createServer((req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('VLESS Backend Active');
+    // මෙතන තමයි VLESS ට්‍රැෆික් එක හරවන්නේ
+    res.writeHead(200, {'Content-Type': 'text/plain'});
+    res.end('VLESS Backend Active');
 });
 
-server.listen(process.env.PORT || 3000, () => {
-  console.log('Server running');
+// WebSocket ඉල්ලීම් සඳහා
+server.on('upgrade', (req, socket, head) => {
+    proxy.ws(req, socket, head, { target: 'http://127.0.0.1:3000' });
 });
+
+server.listen(process.env.PORT || 3000);
